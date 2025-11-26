@@ -1,25 +1,53 @@
 package opencvtest;
+
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
+
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 public class testopencv {
+
+    static {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+    }
+
     public static void main(String[] args) {
 
+        // 1) Charger l'image (met ici ton chemin réel)
+        String path = "C:/Romain/chat.jpg";
+        Mat img = Imgcodecs.imread(path);
 
-        try {
-            System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-            System.out.println("OpenCV chargé avec succès !");
-        } catch (UnsatisfiedLinkError e) {
-            System.err.println("Erreur : impossible de charger OpenCV.");
-            System.err.println("Assure-toi que le chemin vers les DLL / .so est correctement configuré.");
+        if (img.empty()) {
+            System.out.println(" Impossible de charger l'image !");
             return;
         }
 
+        //Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2RGB);
+        BufferedImage buff = matToBufferedImage(img);
 
-        System.out.println("Version OpenCV : " + Core.VERSION);
+        JFrame frame = new JFrame("Image OpenCV");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().add(new JLabel(new ImageIcon(buff)));
+        frame.pack();
+        frame.setVisible(true);
+    }
 
-        Mat mat = Mat.eye(3, 3, CvType.CV_8UC1);
-        System.out.println("Matrice de test :\n" + mat.dump());
+    public static BufferedImage matToBufferedImage(Mat matrix) {
+        int type = BufferedImage.TYPE_3BYTE_BGR;
+        if (matrix.channels() == 1) {
+            type = BufferedImage.TYPE_BYTE_GRAY;
+        }
+        BufferedImage image = new BufferedImage(matrix.width(), matrix.height(), type);
+        byte[] data = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+        matrix.get(0, 0, data);
+        return image;
     }
 }
