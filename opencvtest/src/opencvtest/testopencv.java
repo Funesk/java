@@ -12,7 +12,7 @@ import java.awt.image.DataBufferByte;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-
+// 
 public class testopencv {
 
     static {
@@ -21,7 +21,7 @@ public class testopencv {
 
     public static void main(String[] args) {
 
-        // 1) Charger l'image (met ici ton chemin réel)
+       
         String path = "C:/Romain/chat.jpg";
         Mat img = Imgcodecs.imread(path);
 
@@ -30,7 +30,7 @@ public class testopencv {
             return;
         }
 
-        //Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2RGB);
+        
         BufferedImage buff = matToBufferedImage(img);
 
         JFrame frame = new JFrame("Image OpenCV");
